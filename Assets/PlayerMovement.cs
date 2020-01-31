@@ -13,6 +13,15 @@ public class PlayerMovement : MonoBehaviour
     float tiempo = 0;
     bool canhold = true;
 
+    bool looking_right = false;
+
+    public float attached_offset = 0.2f;
+    float offset_anim = 0.05f;
+
+    bool atached = false;
+
+    GameObject attached_object;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -30,6 +39,9 @@ public class PlayerMovement : MonoBehaviour
             Movement();
             Mechanism();
         }
+
+        Attachements();
+
 
 
     }
@@ -66,7 +78,7 @@ public class PlayerMovement : MonoBehaviour
 
     void Mechanism() {
 
-        if (Input.GetKeyDown("Z") && canhold) {
+        if (Input.GetKeyDown(KeyCode.Z) && canhold) {
 
             HoldNearObjetc();
         }
@@ -105,7 +117,7 @@ public class PlayerMovement : MonoBehaviour
 
         GameObject closest = objetos[0];
 
-        float pdistancia;
+        float pdistancia = 9999999;
         float distancia; 
 
         foreach (GameObject go in objetos) {
@@ -114,10 +126,44 @@ public class PlayerMovement : MonoBehaviour
 
             if (distancia < pdistancia) {
 
+                pdistancia = distancia; 
                 closest = go;
             
             }
+        }
 
+        atached = !atached;
+
+        attached_object = closest; 
+
+
+        Debug.Log(closest);
+    }
+
+    void AtachObjectToObject(GameObject obj) {
+        Vector2 pos = transform.position;
+
+        if (Input.GetAxis("Horizontal") > 0)
+        {
+            
+            pos.x = pos.x + attached_offset;
+        }
+        else {
+            pos.x = pos.x + -attached_offset;
+        }
+        
+        obj.transform.position = pos;
+        
+    }
+
+    void Attachements() {
+
+        if (!atached) {
+            return;
+        }
+        else 
+        {
+            AtachObjectToObject(attached_object);
         }
     
     }
