@@ -12,6 +12,7 @@ public class PlayerMovement : MonoBehaviour
     bool alive = true;
     float tiempo = 0;
     bool canhold = true;
+    bool canfix = false; 
 
     bool looking_right = false;
 
@@ -78,9 +79,23 @@ public class PlayerMovement : MonoBehaviour
 
     void Mechanism() {
 
-        if (Input.GetKeyDown(KeyCode.Z) && canhold) {
+  
+        if (Input.GetKeyDown(KeyCode.Z)) {
 
-            HoldNearObjetc();
+            FindNearBrokeObjetc();
+
+            if (canfix)
+            {
+
+            }
+            else {
+                HoldNearObjetc();
+            }
+
+
+
+
+            
         }
     }
 
@@ -118,26 +133,73 @@ public class PlayerMovement : MonoBehaviour
         GameObject closest = objetos[0];
 
         float pdistancia = 9999999;
-        float distancia; 
+        float distancia;
+        float distancia2;
 
         foreach (GameObject go in objetos) {
 
             distancia = (transform.position - go.transform.position).magnitude;
 
-            if (distancia < pdistancia) {
+            if (distancia < 1)
+            {
+                if ((distancia < pdistancia))
+                {
 
-                pdistancia = distancia; 
-                closest = go;
-            
+                    pdistancia = distancia;
+                    closest = go;
+
+                }
             }
+
         }
 
         atached = !atached;
 
-        attached_object = closest; 
+        distancia2 = (transform.position - closest.transform.position).magnitude;
+
+
+        if (distancia2 > 2) {
+            atached = false; 
+        }
+        if (!closest)
+        {
+            attached_object = null;
+
+        }
+        else {
+            attached_object = closest;
+        }
 
 
         Debug.Log(closest);
+    }
+
+    void FindNearBrokeObjetc()
+    {
+
+        GameObject[] objetos = GameObject.FindGameObjectsWithTag("roto");
+
+        GameObject closest = objetos[0];
+
+        float distancia;
+
+        if (objetos.Length > 0) {
+            foreach (GameObject go in objetos)
+            {
+
+                distancia = (transform.position - go.transform.position).magnitude;
+
+                if (distancia < 1)
+                {
+                    canfix = true;
+                }
+
+            }
+        }
+
+
+
+        //Debug.Log(closest);
     }
 
     void AtachObjectToObject(GameObject obj) {
