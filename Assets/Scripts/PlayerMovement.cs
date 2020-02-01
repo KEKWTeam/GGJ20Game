@@ -367,8 +367,8 @@ public class PlayerMovement : MonoBehaviour
 
     void zoomIn()
     {
-        camera.orthographicSize = 2.0f;
-        LeanTween.value(camera.gameObject, camera.orthographicSize, 1.4f, 2.0f).setOnUpdate((float flt) => {
+        camera.orthographicSize = 7.0f;
+        LeanTween.value(camera.gameObject, camera.orthographicSize, 5f, 7f).setOnUpdate((float flt) => {
             camera.orthographicSize = flt;
         });
     }
