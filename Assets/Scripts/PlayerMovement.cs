@@ -54,11 +54,7 @@ public class PlayerMovement : MonoBehaviour
 
     void OnCollisionEnter2D(Collision2D col)
     {
-<<<<<<< HEAD:Assets/PlayerMovement.cs
      //   Debug.Log(col.gameObject.tag); //Debug del objeto con el que choca 
-=======
-        //Debug.Log(col.gameObject.tag); //Debug del objeto con el que choca 
->>>>>>> 3a991a49e49ed5693250f6eb04baa1a571e9bc7e:Assets/Scripts/PlayerMovement.cs
         canjump = true;
         if(col.gameObject.tag == "Ground"){ //Si el tag es Ground puede saltar 
             canjump = true;
