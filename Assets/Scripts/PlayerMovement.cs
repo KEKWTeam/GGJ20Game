@@ -6,8 +6,11 @@ public class PlayerMovement : MonoBehaviour
 
 {
     Rigidbody2D rb;
+    public GameObject rb2;
     public float jumpforce = 1;
-    public float player_speed = 5; 
+    public float player_speed = 5;
+    public float diversificador_tiempo = 20;
+
     bool canjump = true;
     bool alive = true;
     float tiempo = 0;
@@ -38,10 +41,22 @@ public class PlayerMovement : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        tiempo += Time.deltaTime;
+
         LifeCounter();
-        if (alive) {
+        if (alive) 
+        {
             Movement();
             Mechanism();
+        }
+
+        if (tiempo > diversificador_tiempo)
+        {
+            tiempo = 0;
+            alive = false;
+            Destroy(rb);
+            Destroy(GetComponent<BoxCollider2D>());
+            Instantiate(rb2);
         }
 
         Attachements();
