@@ -70,6 +70,10 @@ public class HudScript : MonoBehaviour
         string[] date3 = System.IO.File.ReadAllLines(@"Assets\files\" + scene3 + ".txt");
 
         string[] death_list = { date1[0], date2[0], date3[0] };
+        Debug.Log(date1[0]);
+        Debug.Log(date2[0]);
+        Debug.Log(date3[0]);
+
 
         return death_list;
 

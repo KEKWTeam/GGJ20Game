@@ -13,8 +13,9 @@ public class PlayerMovement : MonoBehaviour
     public GameObject rb2;
     public Camera camera;
     public MovingPlatform movingPlatform;
+    private HudScript hud = null;
 
-    public float jumpforce = 1;
+    public float jumpforce = 15;
     public float player_speed = 5;
     float diversificador_tiempo = 10;
     public float attached_offset = 0.2f;
@@ -30,8 +31,6 @@ public class PlayerMovement : MonoBehaviour
 
     float time = 0;
     float offset_anim = 0.05f;
-
-    private HudScript hud = null;
 
     // Start is called before the first frame update
     void Start()
