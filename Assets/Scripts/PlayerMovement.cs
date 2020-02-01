@@ -117,6 +117,11 @@ public class PlayerMovement : MonoBehaviour
         if (hit.collider != null && hit.collider.tag == "Ground")
         {
             can_jump = true;
+            animator.SetBool("grounded", true);
+        }
+        else
+        {
+            animator.SetBool("grounded", false);
         }
 
         if (Input.GetKeyDown("space") && can_jump)
