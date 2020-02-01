@@ -9,6 +9,11 @@ public class HudScript : MonoBehaviour
     private int deaths = 0;
     private int fixs = 0; 
     public Text deathtext = null;
+
+    public string scene1 = "Nivel1";
+    public string scene2 = "Nivel2";
+    public string scene3 = "Nivel3";
+
     public Text fixtext = null;
     // Start is called before the first frame update
     void Start()
@@ -33,15 +38,15 @@ public class HudScript : MonoBehaviour
     {
         string scene = SceneManager.GetActiveScene().name;
 
-        if (scene.Equals("Nivel1"))
+        if (scene.Equals(scene1))
         {
             GenerateData(deaths.ToString(), scene);
         }
-        else if (scene.Equals("Nivel2"))
+        else if (scene.Equals(scene2))
         {
             GenerateData(deaths.ToString(), scene);
         }
-        else if (scene.Equals("Nivel3"))
+        else if (scene.Equals(scene3))
         {
             GenerateData(deaths.ToString(), scene);
         }
@@ -58,8 +63,15 @@ public class HudScript : MonoBehaviour
         System.IO.File.WriteAllLines(@"Assets\files\" + scene + ".txt", linesToWrite);
     }
 
-    public void loadDeaths()
+    public string[] loadDeaths()
     {
+        string[] date1 = System.IO.File.ReadAllLines(@"Assets\files\" + scene1 + ".txt");
+        string[] date2 = System.IO.File.ReadAllLines(@"Assets\files\" + scene2 + ".txt");
+        string[] date3 = System.IO.File.ReadAllLines(@"Assets\files\" + scene3 + ".txt");
+
+        string[] death_list = { date1[0], date2[0], date3[0] };
+
+        return death_list;
 
     }
 
