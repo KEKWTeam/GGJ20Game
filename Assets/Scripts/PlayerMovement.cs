@@ -10,6 +10,8 @@ public class PlayerMovement : MonoBehaviour
     Animator animator;
     GameObject attached_object;
 
+    SpriteRenderer sprite; 
+
     public LayerMask mask;
 
     public GameObject rb2;
@@ -19,8 +21,8 @@ public class PlayerMovement : MonoBehaviour
 
     public float jumpforce = 15;
     public float player_speed = 5;
-    float diversificador_tiempo = 10;
-    public float attached_offset = 0.2f;
+    public float diversificador_tiempo;
+    public float attached_offset;
     public bool can_move = true;
 
     bool can_jump = true;
@@ -46,7 +48,10 @@ public class PlayerMovement : MonoBehaviour
         animator = GetComponent<Animator>();
         alive = true;
         camera = GameObject.FindGameObjectWithTag("MainCamera").GetComponent<Camera>();
-    }
+        attached_offset = 0.7f;
+        diversificador_tiempo = 10;
+        sprite = GetComponent<SpriteRenderer>();
+}
 
     // Update is called once per frame
     void Update()
@@ -59,6 +64,7 @@ public class PlayerMovement : MonoBehaviour
             if (can_move){
                 Movement();
                 Mechanism();
+
             }
             CameraFollow();
         }
@@ -68,7 +74,7 @@ public class PlayerMovement : MonoBehaviour
             time = 0;
             alive = false;
             if(animator)
-                animator.SetBool("isDead", true);
+                animator.SetBool("is_dead", true);
 
             if (atached)
             {
@@ -79,13 +85,14 @@ public class PlayerMovement : MonoBehaviour
             {
                 hud.OnPlayerDeath();
             }
-            else
-            {
-                Debug.LogError("No existe HudScript");
-            }
+            //else
+            //{
+            //    Debug.LogError("No existe HudScript");
+            //}
 
             Destroy(GetComponent<BoxCollider2D>());
             Destroy(rb);
+            sprite.sortingOrder = 3;
             
             GameObject new_robot = Instantiate(rb2);
             new_robot.GetComponent<BoxCollider2D>().enabled = true;
@@ -113,7 +120,7 @@ public class PlayerMovement : MonoBehaviour
 
         RaycastHit2D hit = Physics2D.Raycast(GetComponent<BoxCollider2D>().bounds.center, Vector2.down, GetComponent<BoxCollider2D>().bounds.extents.y + 0.05f, mask);
         if(hit.collider != null)
-            Debug.Log(hit.collider.name);
+            //Debug.Log(hit.collider.name);
         if (hit.collider != null && hit.collider.tag == "Ground")
         {
             can_jump = true;
@@ -127,13 +134,17 @@ public class PlayerMovement : MonoBehaviour
         if (Input.GetKeyDown("space") && can_jump)
         {
             can_jump = false;
-
+            animator.SetTrigger("jump");
             rb.AddForce(Vector2.up * jumpforce);
         }
 
         Vector2 movement = Vector2.zero;
 
         movement.x = Input.GetAxis("Horizontal");
+
+        //if (movement.x > 0.1) {
+        //    sprite.
+        //}
 
         if(animator)
             animator.SetFloat("speed", Mathf.Abs(movement.x));
@@ -154,14 +165,17 @@ public class PlayerMovement : MonoBehaviour
             if (can_fix)
             { 
                 Destroy(attached_object);
-                hud.FixRoto();
+                if (hud)
+                {
+                    hud.FixRoto();
+                }
                 atached = false;
                 can_fix = false; 
             }
             else {
                 HoldNearObjetc();
             }
-            Debug.Log(can_fix);
+            //Debug.Log(can_fix);
         }
 
         if (can_throw) {
@@ -206,6 +220,8 @@ public class PlayerMovement : MonoBehaviour
 
         if (objetos.Length > 0) {
 
+            //Debug.Log(objetos.Length);
+
             GameObject closest = objetos[0];
 
             float pdistancia = 9999999;
@@ -217,7 +233,7 @@ public class PlayerMovement : MonoBehaviour
 
                 distancia = (transform.position - go.transform.position).magnitude;
 
-                if (distancia < 1)
+                if (distancia < 2)
                 {
                     if ((distancia < pdistancia))
                     {
@@ -262,7 +278,9 @@ public class PlayerMovement : MonoBehaviour
 
         GameObject[] objetos = GameObject.FindGameObjectsWithTag("roto");
 
+        Debug.Log(objetos.Length);
         GameObject closest = objetos[0];
+        
 
         float distancia;
 
@@ -299,6 +317,7 @@ public class PlayerMovement : MonoBehaviour
             }
             if(Input.GetAxis("Horizontal") < 0)
             {
+                //Debug.Log(attached_offset);
                 pos.x = pos.x + -attached_offset;
             }
             obj.GetComponent<BoxCollider2D>().enabled = false;
@@ -320,6 +339,7 @@ public class PlayerMovement : MonoBehaviour
         else 
         {
             AtachObjectToObject(attached_object);
+            animator.SetBool("atached", true);
             can_throw = true; 
 
         }
