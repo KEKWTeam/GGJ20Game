@@ -80,7 +80,7 @@ public class PlayerMovement : MonoBehaviour
 
         Attachements();
 
-        ThrowingObjetcts();
+        //ThrowingObjetcts();
 
 
 
@@ -269,7 +269,7 @@ public class PlayerMovement : MonoBehaviour
 
                 pos.x = pos.x + attached_offset;
             }
-            else
+            if(Input.GetAxis("Horizontal") < 0)
             {
                 pos.x = pos.x + -attached_offset;
             }
@@ -302,8 +302,15 @@ public class PlayerMovement : MonoBehaviour
 
         if (attached_object) {
             atached = false;
-            throwing = true; 
-           
+            throwing = true;
+
+            Vector2 throwforce = Vector2.zero;
+
+            throwforce.y = 500;
+            throwforce.x = 50.3f;
+
+            attached_object.GetComponent<Rigidbody2D>().AddForce(throwforce);
+            can_throw = false;
         }
     
     }
