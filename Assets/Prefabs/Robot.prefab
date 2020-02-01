@@ -73,7 +73,7 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 1
+  m_SortingOrder: 5
   m_Sprite: {fileID: 21300000, guid: 6c3a28d98311c5b48a98ced5a6c8e8d4, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
@@ -151,10 +151,12 @@ MonoBehaviour:
   camera: {fileID: 3697407609941870854, guid: dd976f6c8f71ec94f981661765ed02a6, type: 3}
   movingPlatform: {fileID: 7376582561982532989, guid: fb1df3fc22659664abcb97a53c4a20ae,
     type: 3}
-  jumpforce: 100
+  jumpforce: 300
   player_speed: 5
-  attached_offset: 0.2
+  diversificador_tiempo: 20
+  attached_offset: 0.7
   can_move: 1
+  time_switch: 5
 --- !u!95 &5228156528023700612
 Animator:
   serializedVersion: 3
