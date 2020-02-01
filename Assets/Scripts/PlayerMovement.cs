@@ -31,6 +31,7 @@ public class PlayerMovement : MonoBehaviour
 
     float time = 0;
     float offset_anim = 0.05f;
+    public float time_switch = 5.0f;
 
     private HudScript hud = null;
 
@@ -87,7 +88,7 @@ public class PlayerMovement : MonoBehaviour
             
             GameObject new_robot = Instantiate(rb2);
             new_robot.GetComponent<BoxCollider2D>().enabled = true;
-
+            new_robot.GetComponent<PlayerMovement>().can_move = true;
             zoomIn();
         }
 
@@ -382,7 +383,8 @@ public class PlayerMovement : MonoBehaviour
             {
                 can_move = false;
                 StartCoroutine(movingPlatform.ActivatePlatform());
-                can_move = true;
+                //can_move = true;
+                StartCoroutine(BlockPlayer5Sec());
             }
         }
 
@@ -394,5 +396,12 @@ public class PlayerMovement : MonoBehaviour
             movingPlatform.can_switch = false;
         }
 
+    }
+
+
+    public IEnumerator BlockPlayer5Sec()
+    {
+        yield return new WaitForSeconds(time_switch);
+        can_move = true;
     }
 }
