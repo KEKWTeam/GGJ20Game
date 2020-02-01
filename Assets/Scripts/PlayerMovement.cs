@@ -111,7 +111,7 @@ public class PlayerMovement : MonoBehaviour
 
     //Controles
 
-    public void Movement() {
+    void Movement() {
 
         if (Input.GetKeyDown("space") && can_jump)
         {
@@ -378,6 +378,12 @@ public class PlayerMovement : MonoBehaviour
         if (other.tag == "Switch")
         {
             movingPlatform.can_switch = true;
+            if (Input.GetKeyDown(KeyCode.X) && alive)
+            {
+                can_move = false;
+                StartCoroutine(movingPlatform.ActivatePlatform());
+                can_move = true;
+            }
         }
 
     }
