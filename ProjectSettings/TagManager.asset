@@ -8,6 +8,8 @@ TagManager:
   - Ground
   - material
   - roto
+  - Switch
+  - Platform1
   layers:
   - Default
   - TransparentFX

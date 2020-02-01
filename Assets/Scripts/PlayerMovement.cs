@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class PlayerMovement : MonoBehaviour
 
@@ -10,12 +11,12 @@ public class PlayerMovement : MonoBehaviour
     GameObject attached_object;
 
     public GameObject rb2;
-
     public Camera camera;
+    public MovingPlatform movingPlatform;
 
     public float jumpforce = 1;
     public float player_speed = 5;
-    float diversificador_tiempo = 5;
+    float diversificador_tiempo = 10;
     public float attached_offset = 0.2f;
 
     bool can_jump = true;
@@ -367,5 +368,22 @@ public class PlayerMovement : MonoBehaviour
         LeanTween.value(camera.gameObject, camera.orthographicSize, 1.4f, 2.0f).setOnUpdate((float flt) => {
             camera.orthographicSize = flt;
         });
+    }
+
+    public void OnTriggerStay2D(Collider2D other)
+    {
+        if (other.tag == "Switch")
+        {
+            movingPlatform.can_switch = true;
+        }
+
+    }
+    public void OnTriggerExit2D(Collider2D other)
+    {
+        if (other.tag == "Switch")
+        {
+            movingPlatform.can_switch = false;
+        }
+
     }
 }
