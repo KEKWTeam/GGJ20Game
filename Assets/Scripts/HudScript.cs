@@ -7,7 +7,9 @@ using UnityEngine.SceneManagement;
 public class HudScript : MonoBehaviour
 {
     private int deaths = 0;
+    private int fixs = 0; 
     public Text deathtext = null;
+    public Text fixtext = null;
     // Start is called before the first frame update
     void Start()
     {
@@ -18,6 +20,8 @@ public class HudScript : MonoBehaviour
     void Update()
     {
         deathtext.text = "Muertes: " + deaths.ToString();
+
+        UpdateFixes();
     }
 
     public void OnPlayerDeath()
@@ -57,5 +61,13 @@ public class HudScript : MonoBehaviour
     public void loadDeaths()
     {
 
+    }
+
+    void UpdateFixes() {
+
+        GameObject[] rotos = GameObject.FindGameObjectsWithTag("roto");
+
+        fixtext.text = fixs.ToString() + (rotos.Length).ToString();
+    
     }
 }
