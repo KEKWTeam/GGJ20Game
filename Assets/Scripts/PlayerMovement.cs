@@ -61,7 +61,8 @@ public class PlayerMovement : MonoBehaviour
         {
             time = 0;
             alive = false;
-            animator.SetBool("isDead", true);
+            if(animator)
+                animator.SetBool("isDead", true);
 
             if (atached)
             {
@@ -119,7 +120,8 @@ public class PlayerMovement : MonoBehaviour
 
         movement.x = Input.GetAxis("Horizontal");
 
-        animator.SetFloat("speed", Mathf.Abs(movement.x));
+        if(animator)
+            animator.SetFloat("speed", Mathf.Abs(movement.x));
         transform.Translate((movement * player_speed) * Time.deltaTime);
 
 
