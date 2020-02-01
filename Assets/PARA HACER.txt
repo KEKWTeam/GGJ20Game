@@ -22,3 +22,13 @@ Arte(Tiles)
 	-Tiles de tuberias
 	-Tiles de tuberias rotas
 	-Animacion de palanca moviendose
+
+
+	public Camera camera;
+	void zoomIn()
+		{
+			camera.orthographicSize = 2.0f;
+			LeanTween.value(camera.gameObject, camera.orthographicSize, 1.4f, 2.0f).setOnUpdate((float flt) => {
+				camera.orthographicSize = flt;
+			});
+		}
