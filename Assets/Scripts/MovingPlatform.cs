@@ -12,6 +12,7 @@ public class MovingPlatform : MonoBehaviour
     public bool moving_up = true;
     public bool can_switch = false;
     public float time_switch = 5.0f;
+    public PlayerMovement playerMovement;
 
     float max_distance = 0;
 
@@ -36,7 +37,8 @@ public class MovingPlatform : MonoBehaviour
     IEnumerator ActivatePlatform()
     {
         can_switch = false;
-
+        playerMovement.can_move = false;
+        playerMovement.Movement();
         yield return new WaitForSeconds(time_switch);
 
         if (moving_up)
@@ -54,6 +56,7 @@ public class MovingPlatform : MonoBehaviour
             moving_up = true;
         }
         can_switch = true;
+        playerMovement.can_move = true;
     }
 
 }
