@@ -54,6 +54,11 @@ public class PlayerMovement : MonoBehaviour
         {
             time = 0;
             alive = false;
+            if (atached)
+            {
+                atached = false;
+                Attachements();
+            }
             if (hud != null)
             {
                 hud.OnPlayerDeath();
@@ -66,8 +71,8 @@ public class PlayerMovement : MonoBehaviour
             Destroy(GetComponent<BoxCollider2D>());
             Destroy(rb);
             
-            GameObject puta = Instantiate(rb2);
-            puta.GetComponent<BoxCollider2D>().enabled = true;
+            GameObject new_robot = Instantiate(rb2);
+            new_robot.GetComponent<BoxCollider2D>().enabled = true;
            
         }
 
