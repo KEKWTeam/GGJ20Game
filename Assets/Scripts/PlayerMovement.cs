@@ -10,6 +10,8 @@ public class PlayerMovement : MonoBehaviour
     Animator animator;
     GameObject attached_object;
 
+    public LayerMask mask;
+
     public GameObject rb2;
     public Camera camera;
     public MovingPlatform movingPlatform;
@@ -101,17 +103,21 @@ public class PlayerMovement : MonoBehaviour
 
     void OnCollisionEnter2D(Collision2D col)
     {
-     //   Debug.Log(col.gameObject.tag); //Debug del objeto con el que choca 
-        can_jump = true;
-        if(col.gameObject.tag == "Ground"){ //Si el tag es Ground puede saltar 
-            can_jump = true;
-        }
+
     }
 
 
     //Controles
 
     void Movement() {
+
+        RaycastHit2D hit = Physics2D.Raycast(GetComponent<BoxCollider2D>().bounds.center, Vector2.down, GetComponent<BoxCollider2D>().bounds.extents.y + 0.05f, mask);
+        if(hit.collider != null)
+            Debug.Log(hit.collider.name);
+        if (hit.collider != null && hit.collider.tag == "Ground")
+        {
+            can_jump = true;
+        }
 
         if (Input.GetKeyDown("space") && can_jump)
         {

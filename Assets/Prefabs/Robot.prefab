@@ -14,9 +14,9 @@ GameObject:
   - component: {fileID: 756242116389947114}
   - component: {fileID: 756242116389947115}
   - component: {fileID: 5228156528023700612}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Robot
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -144,11 +144,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f4b560c6844ed1a4bbed28396b947c9f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  mask:
+    serializedVersion: 2
+    m_Bits: 311
   rb2: {fileID: 756242116389947030}
   camera: {fileID: 3697407609941870854, guid: dd976f6c8f71ec94f981661765ed02a6, type: 3}
   movingPlatform: {fileID: 7376582561982532989, guid: fb1df3fc22659664abcb97a53c4a20ae,
     type: 3}
-  jumpforce: 1
+  jumpforce: 100
   player_speed: 5
   attached_offset: 0.2
   can_move: 1
