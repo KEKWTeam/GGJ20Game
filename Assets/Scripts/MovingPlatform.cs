@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class MovingPlatform : MonoBehaviour
 {
@@ -9,7 +10,11 @@ public class MovingPlatform : MonoBehaviour
     public float bottom_position = 0.0f;
     public float top_position = 1.0f;
     public bool moving_up = true;
+    public bool can_switch = false;
+    public float time_switch = 5.0f;
+
     float max_distance = 0;
+
     void Start()
     {
         max_distance = top_position - bottom_position;
@@ -18,28 +23,37 @@ public class MovingPlatform : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        
 
-        if (Input.GetKeyDown("space"))
-            ActivatePlatform();
+        if (Input.GetKeyDown(KeyCode.X) && can_switch)
+        {
+            StartCoroutine(ActivatePlatform());
+
+        }
+            
     }
 
-    void ActivatePlatform()
+    IEnumerator ActivatePlatform()
     {
- 
+        can_switch = false;
+
+        yield return new WaitForSeconds(time_switch);
+
         if (moving_up)
         {
             LeanTween.cancel(gameObject);
-            Debug.Log(top_position);
-
+            //Debug.Log(top_position);
             transform.LeanMoveY(top_position, speed*(Mathf.Abs(top_position - transform.position.y)/ max_distance) );
             moving_up = false;
         }
         else
         {
             LeanTween.cancel(gameObject);
-            Debug.Log(bottom_position);
+            //Debug.Log(bottom_position);
             transform.LeanMoveY(bottom_position, speed * (Mathf.Abs( bottom_position- transform.position.y )/ max_distance ));
             moving_up = true;
         }
+        can_switch = true;
     }
+
 }
