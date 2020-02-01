@@ -8,8 +8,7 @@ TagManager:
   - Ground
   - material
   - roto
-  - Switch
-  - Platform1
+  - Canvas
   layers:
   - Default
   - TransparentFX
