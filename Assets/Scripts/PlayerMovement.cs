@@ -6,6 +6,7 @@ public class PlayerMovement : MonoBehaviour
 
 {
     Rigidbody2D rb;
+    Animator animator;
     GameObject attached_object;
 
     public GameObject rb2;
@@ -34,6 +35,7 @@ public class PlayerMovement : MonoBehaviour
     {
         rb = GetComponent<Rigidbody2D>();
         hud = GameObject.FindGameObjectWithTag("GameController").GetComponent<HudScript>();
+        animator = GetComponent<Animator>();
         alive = true;
     }
 
@@ -109,6 +111,7 @@ public class PlayerMovement : MonoBehaviour
 
         movement.x = Input.GetAxis("Horizontal");
 
+        animator.SetFloat("speed", Mathf.Abs(movement.x));
         transform.Translate((movement * player_speed) * Time.deltaTime);
 
 
@@ -280,8 +283,10 @@ public class PlayerMovement : MonoBehaviour
     void Attachements() {
 
         if (!atached) {
-            attached_object.GetComponent<BoxCollider2D>().enabled = true;
-           
+            if (attached_object) {
+                attached_object.GetComponent<BoxCollider2D>().enabled = true;
+            }
+
             return;
         }
         else 
