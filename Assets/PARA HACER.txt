@@ -1,0 +1,24 @@
+HACER:
+Implementar cinemachine:
+	-Que siga al jugador dentro de las boundaries
+	-Cuando un robot muera, alejar la camara i volverla a acercar
+Surtidores de agua:
+	-Hacer un surtidor con particulas 
+	-Añadir un trigger al surtidor que añada fuerza a cualquier cosa que entre dentro en una direccion
+	
+UI:
+	-Tener un contador de robots muertos
+	-Tener un contador de partes reparadas / total de partes
+Juego:
+	-Cambiar de escena cuando se reparen todas las partes
+
+Arte(animaciones):
+	-Idle
+	-moverse
+	-saltar
+Arte(Tiles)
+	-Tiles de pared	
+	-Tiles de pared rota
+	-Tiles de tuberias
+	-Tiles de tuberias rotas
+	-Animacion de palanca moviendose
