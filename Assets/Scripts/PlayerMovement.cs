@@ -34,7 +34,9 @@ public class PlayerMovement : MonoBehaviour
     void Start()
     {
         rb = GetComponent<Rigidbody2D>();
-        hud = GameObject.FindGameObjectWithTag("GameController").GetComponent<HudScript>();
+        GameObject hud_go = GameObject.FindGameObjectWithTag("GameController");
+        if(hud_go)
+            hud = hud_go.GetComponent<HudScript>();
         animator = GetComponent<Animator>();
         alive = true;
     }
