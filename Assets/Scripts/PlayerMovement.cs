@@ -12,7 +12,7 @@ public class PlayerMovement : MonoBehaviour
 
     public float jumpforce = 1;
     public float player_speed = 5;
-    public float diversificador_tiempo = 20;
+    float diversificador_tiempo = 20;
     public float attached_offset = 0.2f;
 
     bool can_jump = true;
@@ -46,6 +46,7 @@ public class PlayerMovement : MonoBehaviour
         {
             Movement();
             Mechanism();
+            CameraFollow();
         }
 
         if (time > diversificador_tiempo)
@@ -54,7 +55,10 @@ public class PlayerMovement : MonoBehaviour
             alive = false;
             Destroy(rb);
             Destroy(GetComponent<BoxCollider2D>());
+       
             Instantiate(rb2);
+
+
         }
 
         Attachements();
@@ -251,7 +255,7 @@ public class PlayerMovement : MonoBehaviour
             {
                 pos.x = pos.x + -attached_offset;
             }
-
+            obj.GetComponent<BoxCollider2D>().enabled = false;
             obj.transform.position = pos;
 
         }
@@ -301,5 +305,16 @@ public class PlayerMovement : MonoBehaviour
             }
 
         }
+    }
+
+    void CameraFollow()
+    {
+
+        GameObject[] player = GameObject.FindGameObjectsWithTag("MainCamera");
+        Vector3 offset;
+        offset.x = 0; 
+        offset.y = 0; 
+        player[0].transform.position = new Vector3(transform.position.x + offset.x, transform.position.y + offset.y, -10); // Camera follows the player with specified offset position
+
     }
 }
