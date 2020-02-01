@@ -6,28 +6,26 @@ public class PlayerMovement : MonoBehaviour
 
 {
     Rigidbody2D rb;
+    GameObject attached_object;
+
     public GameObject rb2;
+
     public float jumpforce = 1;
     public float player_speed = 5;
     public float diversificador_tiempo = 20;
-
-    bool canjump = true;
-    bool alive = true;
-    float tiempo = 0;
-    bool canhold = true;
-    bool canfix = false;
-    bool canthrow = false;
-
-    bool throwing = false; 
-
-    bool looking_right = false;
-
     public float attached_offset = 0.2f;
-    float offset_anim = 0.05f;
 
+    bool can_jump = true;
+    bool alive = true;
+    bool can_hold = true;
+    bool can_fix = false;
+    bool can_throw = false;
+    bool throwing = false; 
+    bool looking_right = false;
     bool atached = false;
 
-    GameObject attached_object;
+    float time = 0;
+    float offset_anim = 0.05f;
 
     // Start is called before the first frame update
     void Start()
@@ -41,7 +39,7 @@ public class PlayerMovement : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        tiempo += Time.deltaTime;
+        time += Time.deltaTime;
 
         LifeCounter();
         if (alive) 
@@ -50,9 +48,9 @@ public class PlayerMovement : MonoBehaviour
             Mechanism();
         }
 
-        if (tiempo > diversificador_tiempo)
+        if (time > diversificador_tiempo)
         {
-            tiempo = 0;
+            time = 0;
             alive = false;
             Destroy(rb);
             Destroy(GetComponent<BoxCollider2D>());
@@ -70,9 +68,9 @@ public class PlayerMovement : MonoBehaviour
     void OnCollisionEnter2D(Collision2D col)
     {
      //   Debug.Log(col.gameObject.tag); //Debug del objeto con el que choca 
-        canjump = true;
+        can_jump = true;
         if(col.gameObject.tag == "Ground"){ //Si el tag es Ground puede saltar 
-            canjump = true;
+            can_jump = true;
         }
     }
 
@@ -81,9 +79,9 @@ public class PlayerMovement : MonoBehaviour
 
     void Movement() {
 
-        if (Input.GetKeyDown("space") && canjump)
+        if (Input.GetKeyDown("space") && can_jump)
         {
-            canjump = false;
+            can_jump = false;
 
             rb.AddForce(Vector2.up * jumpforce);
         }
@@ -106,19 +104,19 @@ public class PlayerMovement : MonoBehaviour
                 FindNearBrokeObjetc();
             }
 
-            if (canfix)
+            if (can_fix)
             { 
                 Destroy(attached_object);
-                atached = false; 
-                canfix = false; 
+                atached = false;
+                can_fix = false; 
             }
             else {
                 HoldNearObjetc();
             }
-            Debug.Log(canfix);
+            Debug.Log(can_fix);
         }
 
-        if (canthrow) {
+        if (can_throw) {
 
             if (Input.GetKeyDown(KeyCode.F)) {
                 ThrowAttachedObject();
@@ -135,9 +133,9 @@ public class PlayerMovement : MonoBehaviour
 
     void LifeCounter() {
 
-        tiempo = tiempo + Time.deltaTime;
+        time = time + Time.deltaTime;
 
-        if (tiempo >= 20) {
+        if (time >= 20) {
             alive = false;
             ChangePlayer();
         }
@@ -228,7 +226,7 @@ public class PlayerMovement : MonoBehaviour
 
                 if (distancia < 1)
                 {
-                    canfix = true;
+                    can_fix = true;
                 }
 
             }
@@ -268,7 +266,7 @@ public class PlayerMovement : MonoBehaviour
         else 
         {
             AtachObjectToObject(attached_object);
-            canthrow = true; 
+            can_throw = true; 
 
         }
     
@@ -297,10 +295,9 @@ public class PlayerMovement : MonoBehaviour
             throwforce.y = 1.2f;
             throwforce.x = 2.3f;
 
-
             if (attached_object) {
                 attached_object.transform.Translate(throwforce * Time.deltaTime);
-                canthrow = false;
+                can_throw = false;
             }
 
         }
