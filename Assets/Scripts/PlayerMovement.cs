@@ -18,6 +18,7 @@ public class PlayerMovement : MonoBehaviour
     public float player_speed = 5;
     float diversificador_tiempo = 10;
     public float attached_offset = 0.2f;
+    public bool can_move = true;
 
     bool can_jump = true;
     bool alive;
@@ -51,10 +52,12 @@ public class PlayerMovement : MonoBehaviour
         time += Time.deltaTime;
 
         //LifeCounter();
-        if (alive) 
+        if (alive)
         {
-            Movement();
-            Mechanism();
+            if (can_move){
+                Movement();
+                Mechanism();
+            }
             CameraFollow();
         }
 
@@ -108,7 +111,7 @@ public class PlayerMovement : MonoBehaviour
 
     //Controles
 
-    void Movement() {
+    public void Movement() {
 
         if (Input.GetKeyDown("space") && can_jump)
         {
