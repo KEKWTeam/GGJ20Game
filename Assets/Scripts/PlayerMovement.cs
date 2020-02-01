@@ -12,11 +12,11 @@ public class PlayerMovement : MonoBehaviour
 
     public float jumpforce = 1;
     public float player_speed = 5;
-    float diversificador_tiempo = 20;
+    float diversificador_tiempo = 5;
     public float attached_offset = 0.2f;
 
     bool can_jump = true;
-    bool alive = true;
+    bool alive;
     bool can_hold = true;
     bool can_fix = false;
     bool can_throw = false;
@@ -27,13 +27,14 @@ public class PlayerMovement : MonoBehaviour
     float time = 0;
     float offset_anim = 0.05f;
 
+    private HudScript hud = null;
+
     // Start is called before the first frame update
     void Start()
     {
         rb = GetComponent<Rigidbody2D>();
-
-
-        
+        hud = GameObject.FindGameObjectWithTag("GameController").GetComponent<HudScript>();
+        alive = true;
     }
 
     // Update is called once per frame
@@ -41,7 +42,7 @@ public class PlayerMovement : MonoBehaviour
     {
         time += Time.deltaTime;
 
-        LifeCounter();
+        //LifeCounter();
         if (alive) 
         {
             Movement();
@@ -49,16 +50,25 @@ public class PlayerMovement : MonoBehaviour
             CameraFollow();
         }
 
-        if (time > diversificador_tiempo)
+        if (time > diversificador_tiempo && alive)
         {
             time = 0;
             alive = false;
-            Destroy(rb);
+            if (hud != null)
+            {
+                hud.OnPlayerDeath();
+            }
+            else
+            {
+                Debug.LogError("No existe HudScript");
+            }
+
             Destroy(GetComponent<BoxCollider2D>());
-       
-            Instantiate(rb2);
-
-
+            Destroy(rb);
+            
+            GameObject puta = Instantiate(rb2);
+            puta.GetComponent<BoxCollider2D>().enabled = true;
+           
         }
 
         Attachements();
@@ -265,6 +275,8 @@ public class PlayerMovement : MonoBehaviour
     void Attachements() {
 
         if (!atached) {
+            attached_object.GetComponent<BoxCollider2D>().enabled = true;
+           
             return;
         }
         else 

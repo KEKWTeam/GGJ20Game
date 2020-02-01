@@ -1,25 +1,19 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.UI;
 
-public class HUD : MonoBehaviour
+public class GameController : MonoBehaviour
 {
-    private int deaths = 0;
-    public Text deathtext; 
     // Start is called before the first frame update
+    public GameObject player;
     void Start()
     {
-
+        Instantiate(player);
     }
 
     // Update is called once per frame
     void Update()
     {
-        deathtext.text = "Muertes: " + deaths.ToString();
-    }
-
-    public void OnPlayerDeath() {
-        deaths++;
+        
     }
 }
