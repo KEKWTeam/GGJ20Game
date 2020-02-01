@@ -912,6 +912,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f4b560c6844ed1a4bbed28396b947c9f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  rb2: {fileID: 0}
   jumpforce: 50
   player_speed: 2
+  diversificador_tiempo: 20
   attached_offset: 0.2
