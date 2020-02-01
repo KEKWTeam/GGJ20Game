@@ -67,7 +67,13 @@ public class HudScript : MonoBehaviour
 
         GameObject[] rotos = GameObject.FindGameObjectsWithTag("roto");
 
-        fixtext.text = fixs.ToString() + (rotos.Length).ToString();
+        fixtext.text = fixs.ToString() +" / " + (rotos.Length).ToString();
+    
+    }
+
+    public void FixRoto() {
+
+        fixs++;
     
     }
 }

@@ -11,6 +11,8 @@ public class PlayerMovement : MonoBehaviour
 
     public GameObject rb2;
 
+    public Camera camera;
+
     public float jumpforce = 1;
     public float player_speed = 5;
     float diversificador_tiempo = 5;
@@ -37,6 +39,7 @@ public class PlayerMovement : MonoBehaviour
         hud = GameObject.FindGameObjectWithTag("GameController").GetComponent<HudScript>();
         animator = GetComponent<Animator>();
         alive = true;
+        camera = GameObject.FindGameObjectWithTag("MainCamera").GetComponent<Camera>();
     }
 
     // Update is called once per frame
@@ -56,6 +59,8 @@ public class PlayerMovement : MonoBehaviour
         {
             time = 0;
             alive = false;
+            animator.SetBool("isDead", true);
+
             if (atached)
             {
                 atached = false;
@@ -75,7 +80,8 @@ public class PlayerMovement : MonoBehaviour
             
             GameObject new_robot = Instantiate(rb2);
             new_robot.GetComponent<BoxCollider2D>().enabled = true;
-           
+
+            zoomIn();
         }
 
         Attachements();
@@ -129,6 +135,7 @@ public class PlayerMovement : MonoBehaviour
             if (can_fix)
             { 
                 Destroy(attached_object);
+                hud.FixRoto();
                 atached = false;
                 can_fix = false; 
             }
@@ -243,10 +250,12 @@ public class PlayerMovement : MonoBehaviour
         if (objetos.Length > 0) {
             foreach (GameObject go in objetos)
             {
+                print(attached_object);
+                print(can_fix);
 
                 distancia = (attached_object.transform.position - go.transform.position).magnitude;
 
-                if (distancia < 1)
+                if (distancia < 2)
                 {
                     can_fix = true;
                 }
@@ -345,5 +354,14 @@ public class PlayerMovement : MonoBehaviour
         offset.y = 0; 
         player[0].transform.position = new Vector3(transform.position.x + offset.x, transform.position.y + offset.y, -10); // Camera follows the player with specified offset position
 
+    }
+
+
+    void zoomIn()
+    {
+        camera.orthographicSize = 2.0f;
+        LeanTween.value(camera.gameObject, camera.orthographicSize, 1.4f, 2.0f).setOnUpdate((float flt) => {
+            camera.orthographicSize = flt;
+        });
     }
 }
