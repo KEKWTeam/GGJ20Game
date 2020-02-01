@@ -10,6 +10,8 @@ public class PlayerMovement : MonoBehaviour
     Animator animator;
     GameObject attached_object;
 
+    public LayerMask mask;
+
     public GameObject rb2;
     public Camera camera;
     public MovingPlatform movingPlatform;
@@ -19,6 +21,7 @@ public class PlayerMovement : MonoBehaviour
     public float player_speed = 5;
     float diversificador_tiempo = 10;
     public float attached_offset = 0.2f;
+    public bool can_move = true;
 
     bool can_jump = true;
     bool alive;
@@ -31,6 +34,7 @@ public class PlayerMovement : MonoBehaviour
 
     float time = 0;
     float offset_anim = 0.05f;
+    public float time_switch = 5.0f;
 
     // Start is called before the first frame update
     void Start()
@@ -50,10 +54,12 @@ public class PlayerMovement : MonoBehaviour
         time += Time.deltaTime;
 
         //LifeCounter();
-        if (alive) 
+        if (alive)
         {
-            Movement();
-            Mechanism();
+            if (can_move){
+                Movement();
+                Mechanism();
+            }
             CameraFollow();
         }
 
@@ -83,7 +89,7 @@ public class PlayerMovement : MonoBehaviour
             
             GameObject new_robot = Instantiate(rb2);
             new_robot.GetComponent<BoxCollider2D>().enabled = true;
-
+            new_robot.GetComponent<PlayerMovement>().can_move = true;
             zoomIn();
         }
 
@@ -97,17 +103,26 @@ public class PlayerMovement : MonoBehaviour
 
     void OnCollisionEnter2D(Collision2D col)
     {
-     //   Debug.Log(col.gameObject.tag); //Debug del objeto con el que choca 
-        can_jump = true;
-        if(col.gameObject.tag == "Ground"){ //Si el tag es Ground puede saltar 
-            can_jump = true;
-        }
+
     }
 
 
     //Controles
 
     void Movement() {
+
+        RaycastHit2D hit = Physics2D.Raycast(GetComponent<BoxCollider2D>().bounds.center, Vector2.down, GetComponent<BoxCollider2D>().bounds.extents.y + 0.05f, mask);
+        if(hit.collider != null)
+            Debug.Log(hit.collider.name);
+        if (hit.collider != null && hit.collider.tag == "Ground")
+        {
+            can_jump = true;
+            animator.SetBool("grounded", true);
+        }
+        else
+        {
+            animator.SetBool("grounded", false);
+        }
 
         if (Input.GetKeyDown("space") && can_jump)
         {
@@ -363,8 +378,8 @@ public class PlayerMovement : MonoBehaviour
 
     void zoomIn()
     {
-        camera.orthographicSize = 2.0f;
-        LeanTween.value(camera.gameObject, camera.orthographicSize, 1.4f, 2.0f).setOnUpdate((float flt) => {
+        camera.orthographicSize = 7.0f;
+        LeanTween.value(camera.gameObject, camera.orthographicSize, 5f, 7f).setOnUpdate((float flt) => {
             camera.orthographicSize = flt;
         });
     }
@@ -374,6 +389,13 @@ public class PlayerMovement : MonoBehaviour
         if (other.tag == "Switch")
         {
             movingPlatform.can_switch = true;
+            if (Input.GetKeyDown(KeyCode.X) && alive)
+            {
+                can_move = false;
+                StartCoroutine(movingPlatform.ActivatePlatform());
+                //can_move = true;
+                StartCoroutine(BlockPlayer5Sec());
+            }
         }
 
     }
@@ -384,5 +406,12 @@ public class PlayerMovement : MonoBehaviour
             movingPlatform.can_switch = false;
         }
 
+    }
+
+
+    public IEnumerator BlockPlayer5Sec()
+    {
+        yield return new WaitForSeconds(time_switch);
+        can_move = true;
     }
 }

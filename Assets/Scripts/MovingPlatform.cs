@@ -33,7 +33,7 @@ public class MovingPlatform : MonoBehaviour
             
     }
 
-    IEnumerator ActivatePlatform()
+    public IEnumerator ActivatePlatform()
     {
         can_switch = false;
 
@@ -54,6 +54,7 @@ public class MovingPlatform : MonoBehaviour
             moving_up = true;
         }
         can_switch = true;
+
     }
 
 }
