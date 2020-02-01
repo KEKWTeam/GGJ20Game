@@ -12,7 +12,10 @@ public class PlayerMovement : MonoBehaviour
     bool alive = true;
     float tiempo = 0;
     bool canhold = true;
-    bool canfix = false; 
+    bool canfix = false;
+    bool canthrow = false;
+
+    bool throwing = false; 
 
     bool looking_right = false;
 
@@ -43,13 +46,15 @@ public class PlayerMovement : MonoBehaviour
 
         Attachements();
 
+        ThrowingObjetcts();
+
 
 
     }
 
     void OnCollisionEnter2D(Collision2D col)
     {
-        Debug.Log(col.gameObject.tag); //Debug del objeto con el que choca 
+     //   Debug.Log(col.gameObject.tag); //Debug del objeto con el que choca 
         canjump = true;
         if(col.gameObject.tag == "Ground"){ //Si el tag es Ground puede saltar 
             canjump = true;
@@ -79,23 +84,31 @@ public class PlayerMovement : MonoBehaviour
 
     void Mechanism() {
 
-  
+
         if (Input.GetKeyDown(KeyCode.Z)) {
 
-            FindNearBrokeObjetc();
+            if (attached_object) {
+                FindNearBrokeObjetc();
+            }
 
             if (canfix)
-            {
-
+            { 
+                Destroy(attached_object);
+                atached = false; 
+                canfix = false; 
             }
             else {
                 HoldNearObjetc();
             }
+            Debug.Log(canfix);
+        }
 
+        if (canthrow) {
 
-
-
-            
+            if (Input.GetKeyDown(KeyCode.F)) {
+                ThrowAttachedObject();
+            }
+        
         }
     }
 
@@ -130,48 +143,57 @@ public class PlayerMovement : MonoBehaviour
 
         GameObject[] objetos = GameObject.FindGameObjectsWithTag("material");
 
-        GameObject closest = objetos[0];
+        if (objetos.Length > 0) {
 
-        float pdistancia = 9999999;
-        float distancia;
-        float distancia2;
+            GameObject closest = objetos[0];
 
-        foreach (GameObject go in objetos) {
+            float pdistancia = 9999999;
+            float distancia;
+            float distancia2;
 
-            distancia = (transform.position - go.transform.position).magnitude;
-
-            if (distancia < 1)
+            foreach (GameObject go in objetos)
             {
-                if ((distancia < pdistancia))
+
+                distancia = (transform.position - go.transform.position).magnitude;
+
+                if (distancia < 1)
                 {
+                    if ((distancia < pdistancia))
+                    {
 
-                    pdistancia = distancia;
-                    closest = go;
+                        pdistancia = distancia;
+                        closest = go;
 
+                    }
                 }
+
+            }
+
+            atached = !atached;
+
+            distancia2 = (transform.position - closest.transform.position).magnitude;
+
+
+            if (distancia2 > 2)
+            {
+                atached = false;
+            }
+            if (!closest)
+            {
+                attached_object = null;
+
+            }
+            else
+            {
+                attached_object = closest;
             }
 
         }
 
-        atached = !atached;
-
-        distancia2 = (transform.position - closest.transform.position).magnitude;
+       
 
 
-        if (distancia2 > 2) {
-            atached = false; 
-        }
-        if (!closest)
-        {
-            attached_object = null;
-
-        }
-        else {
-            attached_object = closest;
-        }
-
-
-        Debug.Log(closest);
+       // Debug.Log(closest);
     }
 
     void FindNearBrokeObjetc()
@@ -187,7 +209,7 @@ public class PlayerMovement : MonoBehaviour
             foreach (GameObject go in objetos)
             {
 
-                distancia = (transform.position - go.transform.position).magnitude;
+                distancia = (attached_object.transform.position - go.transform.position).magnitude;
 
                 if (distancia < 1)
                 {
@@ -203,19 +225,24 @@ public class PlayerMovement : MonoBehaviour
     }
 
     void AtachObjectToObject(GameObject obj) {
-        Vector2 pos = transform.position;
 
-        if (Input.GetAxis("Horizontal") > 0)
-        {
-            
-            pos.x = pos.x + attached_offset;
+        if (obj) {
+            Vector2 pos = transform.position;
+
+            if (Input.GetAxis("Horizontal") > 0)
+            {
+
+                pos.x = pos.x + attached_offset;
+            }
+            else
+            {
+                pos.x = pos.x + -attached_offset;
+            }
+
+            obj.transform.position = pos;
+
         }
-        else {
-            pos.x = pos.x + -attached_offset;
-        }
-        
-        obj.transform.position = pos;
-        
+
     }
 
     void Attachements() {
@@ -226,7 +253,41 @@ public class PlayerMovement : MonoBehaviour
         else 
         {
             AtachObjectToObject(attached_object);
+            canthrow = true; 
+
         }
     
+    }
+
+    void ThrowAttachedObject() {
+
+        if (attached_object) {
+            atached = false;
+            throwing = true; 
+           
+        }
+    
+    }
+
+    void ThrowingObjetcts() {
+
+        if (!throwing)
+        {
+            return;
+
+        }
+        else {
+            Vector2 throwforce = Vector2.zero;
+
+            throwforce.y = 1.2f;
+            throwforce.x = 2.3f;
+
+
+            if (attached_object) {
+                attached_object.transform.Translate(throwforce * Time.deltaTime);
+                canthrow = false;
+            }
+
+        }
     }
 }
