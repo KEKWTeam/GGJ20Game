@@ -24,9 +24,11 @@ public class HudScript : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        deathtext.text = "Robots : " + deaths.ToString();
+        deathtext.text = ": " + deaths.ToString();
 
         UpdateFixes();
+
+        CheckFixes();
     }
 
     public void OnPlayerDeath()
@@ -93,5 +95,14 @@ public class HudScript : MonoBehaviour
 
         fixs++;
     
+    }
+
+    void CheckFixes() {
+
+        GameObject[] rotos = GameObject.FindGameObjectsWithTag("roto");
+
+        if (fixs == rotos.Length) {
+            SceneManager.LoadScene("Score");
+        }
     }
 }

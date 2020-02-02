@@ -38,7 +38,7 @@ public class PlayerMovement : MonoBehaviour
 
     float time = 0;
     float offset_anim = 0.05f;
-    public float time_switch = 5.0f;
+    private float time_switch = 2.0f;
     float current_switch_time = 0.0f;
     // Start is called before the first frame update
     void Start()
@@ -65,6 +65,8 @@ public class PlayerMovement : MonoBehaviour
         //LifeCounter();
         if (alive)
         {
+            
+            hud.WriteDeaths();
             if (can_move){
                 Movement();
                 Mechanism();
@@ -93,7 +95,7 @@ public class PlayerMovement : MonoBehaviour
 
             alive = false;
             if(animator)
-                hud.WriteDeaths();
+                
                 animator.SetBool("is_dead", true);
 
 

@@ -154,10 +154,9 @@ MonoBehaviour:
     type: 3}
   jumpforce: 300
   player_speed: 0.1
-  diversificador_tiempo: 20
+  diversificador_tiempo: 10000
   attached_offset: 0.7
   can_move: 1
-  time_switch: 5
 --- !u!95 &5228156528023700612
 Animator:
   serializedVersion: 3
