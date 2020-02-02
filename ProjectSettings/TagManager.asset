@@ -12,6 +12,7 @@ TagManager:
   - Platform1
   - Switch
   - Repaired
+  - barra
   layers:
   - Default
   - TransparentFX
