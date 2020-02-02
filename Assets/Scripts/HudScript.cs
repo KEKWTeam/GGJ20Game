@@ -98,8 +98,7 @@ public class HudScript : MonoBehaviour
     }
 
     void CheckFixes() {
-
-        if (fixs == rotos.Length) {
+        if (fixs == rotos.Length && rotos.Length >= 1) {
             SceneManager.LoadScene("Score");
         }
     }
