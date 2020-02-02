@@ -16,8 +16,8 @@ public class TimerScript : MonoBehaviour
     void Update()
     {
         GameObject player = FindGameObjectsWithLayer(9)[0];
-        text.text = player.GetComponent<PlayerMovement>().time.ToString().Substring(0,4);
-        GameObject rect = GameObject.FindGameObjectWithTag("barra");
+        text.text = player.GetComponent<PlayerMovement>().time.ToString();
+        //GameObject rect = GameObject.FindGameObjectWithTag("barra");
 
         //Vector3 ancho = rect.transform.localScale;
 
