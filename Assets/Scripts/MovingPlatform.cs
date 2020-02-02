@@ -23,24 +23,21 @@ public class MovingPlatform : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        
-
-        if (Input.GetKeyDown(KeyCode.X) && can_switch)
-        {
-            StartCoroutine(ActivatePlatform());
-
-        }
+       
             
     }
 
     public IEnumerator ActivatePlatform()
     {
         can_switch = false;
-
+        Debug.Log("Pre 5 secs");
         yield return new WaitForSeconds(time_switch);
+        Debug.Log("Post 5 secs");
+
 
         if (moving_up)
         {
+            Debug.Log("Going up");
             LeanTween.cancel(gameObject);
             //Debug.Log(top_position);
             transform.LeanMoveY(top_position, speed*(Mathf.Abs(top_position - transform.position.y)/ max_distance) );

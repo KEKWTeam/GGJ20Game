@@ -102,9 +102,9 @@ Rigidbody2D:
   m_AngularDrag: 0.05
   m_GravityScale: 1
   m_Material: {fileID: 0}
-  m_Interpolate: 0
+  m_Interpolate: 1
   m_SleepingMode: 1
-  m_CollisionDetection: 0
+  m_CollisionDetection: 1
   m_Constraints: 4
 --- !u!61 &756242116389947114
 BoxCollider2D:
@@ -152,7 +152,7 @@ MonoBehaviour:
   movingPlatform: {fileID: 7376582561982532989, guid: fb1df3fc22659664abcb97a53c4a20ae,
     type: 3}
   jumpforce: 300
-  player_speed: 5
+  player_speed: 0.1
   diversificador_tiempo: 20
   attached_offset: 0.7
   can_move: 1

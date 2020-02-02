@@ -19,6 +19,8 @@ public class PlayerMovement : MonoBehaviour
     public MovingPlatform movingPlatform;
     private HudScript hud = null;
 
+    GameController game_controller = null;
+
     public float jumpforce = 15;
     public float player_speed = 5;
     public float diversificador_tiempo;
@@ -32,24 +34,26 @@ public class PlayerMovement : MonoBehaviour
     bool can_throw = false;
     bool throwing = false; 
     bool looking_right = false;
-    bool atached = false;
+    bool attached = false;
 
     float time = 0;
     float offset_anim = 0.05f;
     public float time_switch = 5.0f;
-
+    float current_switch_time = 0.0f;
     // Start is called before the first frame update
     void Start()
     {
+        movingPlatform = GameObject.FindGameObjectWithTag("Platform1").GetComponent<MovingPlatform>();
         rb = GetComponent<Rigidbody2D>();
         GameObject hud_go = GameObject.FindGameObjectWithTag("GameController");
-        if(hud_go)
+        if (hud_go)
+        {
             hud = hud_go.GetComponent<HudScript>();
+            game_controller = hud.gameObject.GetComponent<GameController>();
+        }
         animator = GetComponent<Animator>();
         alive = true;
         camera = GameObject.FindGameObjectWithTag("MainCamera").GetComponent<Camera>();
-        attached_offset = 0.7f;
-        diversificador_tiempo = 10;
         sprite = GetComponent<SpriteRenderer>();
 }
 
@@ -66,46 +70,49 @@ public class PlayerMovement : MonoBehaviour
                 Mechanism();
 
             }
+            else
+            {
+                current_switch_time += Time.deltaTime;
+                if(current_switch_time > time_switch)
+                {
+                    can_move = true;
+                    current_switch_time = 0.0f;
+                }
+            }
             CameraFollow();
+            Attachements();
         }
 
         if (time > diversificador_tiempo && alive)
         {
-            time = 0;
+            if (attached_object)
+            {
+                attached_object.GetComponent<BoxCollider2D>().enabled = true;
+            }
+            attached = false;
+            attached_object = null;
+
             alive = false;
             if(animator)
                 animator.SetBool("is_dead", true);
 
-            if (atached)
-            {
-                atached = false;
-                Attachements();
-            }
+
+
             if (hud != null)
             {
                 hud.OnPlayerDeath();
             }
-            //else
-            //{
-            //    Debug.LogError("No existe HudScript");
-            //}
+            else
+            {
+                Debug.LogError("No existe HudScript");
+            }
 
-            Destroy(GetComponent<BoxCollider2D>());
-            Destroy(rb);
-            sprite.sortingOrder = 3;
-            
-            GameObject new_robot = Instantiate(rb2);
-            new_robot.GetComponent<BoxCollider2D>().enabled = true;
-            new_robot.GetComponent<PlayerMovement>().can_move = true;
+            gameObject.layer = 11;
+
+            game_controller.SpawnPlayer();
+
             zoomIn();
         }
-
-        Attachements();
-
-        //ThrowingObjetcts();
-
-
-
     }
 
     void OnCollisionEnter2D(Collision2D col)
@@ -121,7 +128,7 @@ public class PlayerMovement : MonoBehaviour
         RaycastHit2D hit = Physics2D.Raycast(GetComponent<BoxCollider2D>().bounds.center, Vector2.down, GetComponent<BoxCollider2D>().bounds.extents.y + 0.05f, mask);
         if(hit.collider != null)
             //Debug.Log(hit.collider.name);
-        if (hit.collider != null && hit.collider.tag == "Ground")
+        if (hit.collider != null && hit.collider.tag == "Ground" || hit.collider.tag == "Platform1")
         {
             can_jump = true;
             animator.SetBool("grounded", true);
@@ -142,13 +149,30 @@ public class PlayerMovement : MonoBehaviour
 
         movement.x = Input.GetAxis("Horizontal");
 
-        //if (movement.x > 0.1) {
-        //    sprite.
-        //}
+        if (movement.x < -0.1)
+        {
+            sprite.flipX = true;
+        }
+        else if(movement.x > 0.1)
+            sprite.flipX = false;
 
         if(animator)
             animator.SetFloat("speed", Mathf.Abs(movement.x));
-        transform.Translate((movement * player_speed) * Time.deltaTime);
+        rb.AddForce(Vector2.right * movement.x * 100);
+        if (rb.velocity.x > player_speed)
+        {
+            Vector2 new_vel = rb.velocity;
+            new_vel.x = player_speed;
+            rb.velocity = new_vel;
+        }
+        else if(rb.velocity.x < -player_speed)
+        {
+            Vector2 new_vel = rb.velocity;
+            new_vel.x = -player_speed;
+            rb.velocity = new_vel;
+        }
+
+
 
 
     }
@@ -158,61 +182,28 @@ public class PlayerMovement : MonoBehaviour
 
         if (Input.GetKeyDown(KeyCode.Z)) {
 
-            if (attached_object) {
+            if (attached_object)
+            {
                 FindNearBrokeObjetc();
             }
+            else
+            {
+                HoldNearObjetc();
+            }
 
-            if (can_fix)
-            { 
-                Destroy(attached_object);
+             if (can_fix)
+            {
                 if (hud)
                 {
                     hud.FixRoto();
                 }
-                atached = false;
+                attached = false;
                 can_fix = false; 
             }
-            else {
-                HoldNearObjetc();
-            }
-            //Debug.Log(can_fix);
-        }
 
-        if (can_throw) {
-
-            if (Input.GetKeyDown(KeyCode.F)) {
-                ThrowAttachedObject();
-            }
-        
-        }
+        } 
     }
 
-
-
-
-    //Mecanicas del juego
-
-
-    void LifeCounter() {
-
-        time = time + Time.deltaTime;
-
-        if (time >= 20) {
-            alive = false;
-            ChangePlayer();
-        }
-    
-    }
-
-    void ChangePlayer() {
-
-
-        ///Body
-        ///
-
-        alive = true; 
-    
-    }
 
     void HoldNearObjetc() {
 
@@ -245,26 +236,22 @@ public class PlayerMovement : MonoBehaviour
                 }
 
             }
-
-            atached = !atached;
-
             distancia2 = (transform.position - closest.transform.position).magnitude;
-
-
             if (distancia2 > 2)
             {
-                atached = false;
-            }
-            if (!closest)
-            {
+                attached = false;
                 attached_object = null;
-
             }
             else
             {
+                attached = true;
                 attached_object = closest;
             }
-
+        }
+        else
+        {
+            attached = false;
+            attached_object = null;
         }
 
        
@@ -275,39 +262,47 @@ public class PlayerMovement : MonoBehaviour
 
     void FindNearBrokeObjetc()
     {
+        attached = false;
 
         GameObject[] objetos = GameObject.FindGameObjectsWithTag("roto");
+        if (objetos.Length > 0)
+        {
+            GameObject closest = objetos[0];
 
-        Debug.Log(objetos.Length);
-        GameObject closest = objetos[0];
-        
 
-        float distancia;
+            float distancia;
+             foreach (GameObject go in objetos)
+             {
+                 print(go.name);
+                
+                 distancia = Vector2.Distance(go.transform.position, transform.position);
+                 Debug.Log(distancia);
+                 if (distancia < 2)
+                 {
+                     Debug.Log("SHould repair");
+                     can_fix = true;
+                     go.GetComponent<BrokenTile>().setRepairedPiece(attached_object);
+                     return;
+                 }
 
-        if (objetos.Length > 0) {
-            foreach (GameObject go in objetos)
-            {
-                print(attached_object);
-                print(can_fix);
-
-                distancia = (attached_object.transform.position - go.transform.position).magnitude;
-
-                if (distancia < 2)
-                {
-                    can_fix = true;
-                }
-
-            }
+             }
+            
         }
-
 
 
         //Debug.Log(closest);
     }
 
-    void AtachObjectToObject(GameObject obj) {
+    void OnDrawGizmos()
+    {
+        // Draw a yellow sphere at the transform's position
+        Gizmos.color = Color.yellow;
+        Gizmos.DrawWireSphere(transform.position, 2);
+    }
 
-        if (obj) {
+    void AttachObjectToObject() {
+
+        
             Vector2 pos = transform.position;
 
             if (Input.GetAxis("Horizontal") > 0)
@@ -320,68 +315,28 @@ public class PlayerMovement : MonoBehaviour
                 //Debug.Log(attached_offset);
                 pos.x = pos.x + -attached_offset;
             }
-            obj.GetComponent<BoxCollider2D>().enabled = false;
-            obj.transform.position = pos;
+            attached_object.GetComponent<BoxCollider2D>().enabled = false;
+            attached_object.transform.position = pos;
 
-        }
+        
 
     }
 
     void Attachements() {
 
-        if (!atached) {
-            if (attached_object) {
+        if (!attached) {
+            if (attached_object != null) {
                 attached_object.GetComponent<BoxCollider2D>().enabled = true;
+                animator.SetBool("atached", false);
+                attached_object = null;
             }
-
-            return;
         }
         else 
         {
-            AtachObjectToObject(attached_object);
+            AttachObjectToObject();
             animator.SetBool("atached", true);
-            can_throw = true; 
-
         }
     
-    }
-
-    void ThrowAttachedObject() {
-
-        if (attached_object) {
-            atached = false;
-            throwing = true;
-
-            Vector2 throwforce = Vector2.zero;
-
-            throwforce.y = 500;
-            throwforce.x = 50.3f;
-
-            attached_object.GetComponent<Rigidbody2D>().AddForce(throwforce);
-            can_throw = false;
-        }
-    
-    }
-
-    void ThrowingObjetcts() {
-
-        if (!throwing)
-        {
-            return;
-
-        }
-        else {
-            Vector2 throwforce = Vector2.zero;
-
-            throwforce.y = 1.2f;
-            throwforce.x = 2.3f;
-
-            if (attached_object) {
-                attached_object.transform.Translate(throwforce * Time.deltaTime);
-                can_throw = false;
-            }
-
-        }
     }
 
     void CameraFollow()
@@ -403,18 +358,25 @@ public class PlayerMovement : MonoBehaviour
             camera.orthographicSize = flt;
         });
     }
-
+    public void OnTriggerEnter2D(Collider2D collision)
+    {
+        if (collision.tag == "Switch")
+        {
+            movingPlatform.can_switch = true;
+        }
+    }
     public void OnTriggerStay2D(Collider2D other)
     {
         if (other.tag == "Switch")
         {
-            movingPlatform.can_switch = true;
-            if (Input.GetKeyDown(KeyCode.X) && alive)
+            if (Input.GetKeyDown(KeyCode.X) && alive && movingPlatform.can_switch)
             {
+                movingPlatform.can_switch = false;
+
+                animator.SetTrigger("lever");
                 can_move = false;
                 StartCoroutine(movingPlatform.ActivatePlatform());
                 //can_move = true;
-                StartCoroutine(BlockPlayer5Sec());
             }
         }
 
@@ -426,12 +388,5 @@ public class PlayerMovement : MonoBehaviour
             movingPlatform.can_switch = false;
         }
 
-    }
-
-
-    public IEnumerator BlockPlayer5Sec()
-    {
-        yield return new WaitForSeconds(time_switch);
-        can_move = true;
     }
 }

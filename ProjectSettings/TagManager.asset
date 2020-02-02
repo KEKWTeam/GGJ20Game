@@ -9,6 +9,9 @@ TagManager:
   - material
   - roto
   - Canvas
+  - Platform1
+  - Switch
+  - Repaired
   layers:
   - Default
   - TransparentFX
@@ -21,7 +24,7 @@ TagManager:
   - BackGround
   - Player
   - Material
-  - 
+  - DeadPlayer
   - 
   - 
   - 
@@ -43,6 +46,24 @@ TagManager:
   - 
   - 
   m_SortingLayers:
+  - name: BigBackground
+    uniqueID: 733411849
+    locked: 0
+  - name: SmallBackground
+    uniqueID: 2478013477
+    locked: 0
   - name: Default
     uniqueID: 0
+    locked: 0
+  - name: ActiveItems
+    uniqueID: 3332957071
+    locked: 0
+  - name: Foreground
+    uniqueID: 659205979
+    locked: 0
+  - name: UI
+    uniqueID: 3242235657
+    locked: 0
+  - name: New Layer
+    uniqueID: 3437433103
     locked: 0
