@@ -24,7 +24,7 @@ public class HudScript : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        deathtext.text = "Muertes: " + deaths.ToString();
+        deathtext.text = "Robots : " + deaths.ToString();
 
         UpdateFixes();
     }
