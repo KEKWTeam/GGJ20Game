@@ -132,7 +132,7 @@ public class PlayerMovement : MonoBehaviour
 
     }
 
-
+  
     //Controles
 
     void Movement() {
@@ -160,13 +160,13 @@ public class PlayerMovement : MonoBehaviour
         {
             sprite.flipX = true;
             if(!audio_source.isPlaying)
-            audio_source.PlayOneShot(steps);
+                audio_source.PlayOneShot(steps);
         }
         else if (movement.x > 0.1)
         {
             sprite.flipX = false;
-            if(!audio_source.isPlaying)
-            audio_source.PlayOneShot(steps);
+            if (!audio_source.isPlaying)
+                audio_source.PlayOneShot(steps);
         }
 
         if (Input.GetKeyDown("space") && can_jump)
