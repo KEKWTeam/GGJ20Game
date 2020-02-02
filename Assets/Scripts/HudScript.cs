@@ -24,6 +24,7 @@ public class HudScript : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        if (deathtext)
         deathtext.text = "Robots : " + deaths.ToString();
 
         UpdateFixes();
@@ -82,10 +83,13 @@ public class HudScript : MonoBehaviour
     }
 
     void UpdateFixes() {
+        if (fixtext)
+        {
+            GameObject[] rotos = GameObject.FindGameObjectsWithTag("roto");
 
-        GameObject[] rotos = GameObject.FindGameObjectsWithTag("roto");
+            fixtext.text = fixs.ToString() + " / " + (rotos.Length).ToString();
+        }
 
-        fixtext.text = fixs.ToString() +" / " + (rotos.Length).ToString();
     
     }
 
