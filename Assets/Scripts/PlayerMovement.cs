@@ -43,7 +43,7 @@ public class PlayerMovement : MonoBehaviour
     bool looking_right = false;
     bool attached = false;
 
-    float time = 0;
+    public float time = 0;
     float offset_anim = 0.05f;
     private float time_switch = 2.0f;
     float current_switch_time = 0.0f;
@@ -159,11 +159,13 @@ public class PlayerMovement : MonoBehaviour
         if (movement.x < -0.1)
         {
             sprite.flipX = true;
+            if(!audio_source.isPlaying)
             audio_source.PlayOneShot(steps);
         }
         else if (movement.x > 0.1)
         {
             sprite.flipX = false;
+            if(!audio_source.isPlaying)
             audio_source.PlayOneShot(steps);
         }
 
