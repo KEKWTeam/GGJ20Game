@@ -11,7 +11,7 @@ public class MovingPlatform : MonoBehaviour
     public float top_position = 1.0f;
     public bool moving_up = true;
     public bool can_switch = false;
-    public float time_switch = 5.0f;
+    public float time_switch = 2.0f;
 
     float max_distance = 0;
 
