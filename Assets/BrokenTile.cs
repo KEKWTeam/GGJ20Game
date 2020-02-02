@@ -26,6 +26,7 @@ public class BrokenTile : MonoBehaviour
         go.tag = "Untagged";
         repaired_piece = go;
         tag = "Repaired";
-        leak.SetActive(false);
+        if(leak)
+            leak.SetActive(false);
     }
 }
