@@ -198,6 +198,7 @@ public class PlayerMovement : MonoBehaviour
                 if (hud)
                 {
                     hud.FixRoto();
+                    Debug.Log("Fixed");
                 }
                 attached = false;
                 can_fix = false; 

@@ -14,11 +14,13 @@ public class HudScript : MonoBehaviour
     private string scene2 = "Level2";
     private string scene3 = "Level3";
 
+    GameObject[] rotos;
+
     public Text fixtext = null;
     // Start is called before the first frame update
     void Start()
     {
-
+        rotos = GameObject.FindGameObjectsWithTag("roto");
     }
 
     // Update is called once per frame
@@ -39,9 +41,6 @@ public class HudScript : MonoBehaviour
     public void WriteDeaths()
     {
         string scene = SceneManager.GetActiveScene().name;
-        Debug.Log(scene);
-        Debug.Log(scene1);
-        Debug.Log(deaths);
         if (scene.Equals(scene1))
         {
             GenerateData(deaths.ToString(), scene);
@@ -85,7 +84,7 @@ public class HudScript : MonoBehaviour
 
     void UpdateFixes() {
 
-        GameObject[] rotos = GameObject.FindGameObjectsWithTag("roto");
+        
 
         fixtext.text = fixs.ToString() +" / " + (rotos.Length).ToString();
     
@@ -98,8 +97,6 @@ public class HudScript : MonoBehaviour
     }
 
     void CheckFixes() {
-
-        GameObject[] rotos = GameObject.FindGameObjectsWithTag("roto");
 
         if (fixs == rotos.Length) {
             SceneManager.LoadScene("Score");
