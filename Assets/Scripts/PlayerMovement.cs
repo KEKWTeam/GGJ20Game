@@ -6,6 +6,13 @@ using UnityEngine.UI;
 public class PlayerMovement : MonoBehaviour
 
 {
+
+    public AudioClip steps;
+    public AudioClip jump;
+    public AudioClip palanca;
+    public AudioClip repair;
+    AudioSource audio_source;
+    
     Rigidbody2D rb;
     Animator animator;
     GameObject attached_object;
@@ -43,6 +50,7 @@ public class PlayerMovement : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        audio_source = GetComponent<AudioSource>();
         movingPlatform = GameObject.FindGameObjectWithTag("Platform1").GetComponent<MovingPlatform>();
         rb = GetComponent<Rigidbody2D>();
         GameObject hud_go = GameObject.FindGameObjectWithTag("GameController");
@@ -76,6 +84,8 @@ public class PlayerMovement : MonoBehaviour
                 current_switch_time += Time.deltaTime;
                 if(current_switch_time > time_switch)
                 {
+                    audio_source.PlayOneShot(palanca);
+
                     can_move = true;
                     current_switch_time = 0.0f;
                 }
@@ -140,12 +150,7 @@ public class PlayerMovement : MonoBehaviour
             animator.SetBool("grounded", false);
         }
 
-        if (Input.GetKeyDown("space") && can_jump)
-        {
-            can_jump = false;
-            animator.SetTrigger("jump");
-            rb.AddForce(Vector2.up * jumpforce);
-        }
+       
 
         Vector2 movement = Vector2.zero;
 
@@ -154,11 +159,23 @@ public class PlayerMovement : MonoBehaviour
         if (movement.x < -0.1)
         {
             sprite.flipX = true;
+            audio_source.PlayOneShot(steps);
         }
-        else if(movement.x > 0.1)
+        else if (movement.x > 0.1)
+        {
             sprite.flipX = false;
+            audio_source.PlayOneShot(steps);
+        }
 
-        if(animator)
+        if (Input.GetKeyDown("space") && can_jump)
+        {
+            can_jump = false;
+            animator.SetTrigger("jump");
+            rb.AddForce(Vector2.up * jumpforce);
+            audio_source.PlayOneShot(jump);
+        }
+
+        if (animator)
             animator.SetFloat("speed", Mathf.Abs(movement.x));
         rb.AddForce(Vector2.right * movement.x * 100);
         if (rb.velocity.x > player_speed)
@@ -282,6 +299,7 @@ public class PlayerMovement : MonoBehaviour
                  Debug.Log(distancia);
                  if (distancia < 2)
                  {
+                    audio_source.PlayOneShot(repair);
                      Debug.Log("SHould repair");
                      can_fix = true;
                      go.GetComponent<BrokenTile>().setRepairedPiece(attached_object);
