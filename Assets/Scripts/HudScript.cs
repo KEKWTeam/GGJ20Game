@@ -10,9 +10,9 @@ public class HudScript : MonoBehaviour
     private int fixs = 0; 
     public Text deathtext = null;
 
-    public string scene1 = "Nivel1";
-    public string scene2 = "Nivel2";
-    public string scene3 = "Nivel3";
+    private string scene1 = "Level1";
+    private string scene2 = "Level2";
+    private string scene3 = "Level3";
 
     public Text fixtext = null;
     // Start is called before the first frame update
@@ -37,7 +37,9 @@ public class HudScript : MonoBehaviour
     public void WriteDeaths()
     {
         string scene = SceneManager.GetActiveScene().name;
-
+        Debug.Log(scene);
+        Debug.Log(scene1);
+        Debug.Log(deaths);
         if (scene.Equals(scene1))
         {
             GenerateData(deaths.ToString(), scene);

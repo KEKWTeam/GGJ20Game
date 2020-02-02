@@ -68,7 +68,6 @@ public class PlayerMovement : MonoBehaviour
             if (can_move){
                 Movement();
                 Mechanism();
-
             }
             else
             {
@@ -94,6 +93,7 @@ public class PlayerMovement : MonoBehaviour
 
             alive = false;
             if(animator)
+                hud.WriteDeaths();
                 animator.SetBool("is_dead", true);
 
 
